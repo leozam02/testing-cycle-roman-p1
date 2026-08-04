@@ -45,15 +45,15 @@ The unit-level analysis was derived from the source code of `to_roman`. Therefor
 
 Using the corrected control flow graph:
 
-- Number of nodes: `N = 16`
-- Number of edges: `E = 21`
+- Number of nodes: `N = 15`
+- Number of edges: `E = 19`
 
 The cyclomatic complexity is:
 
 ```text
 V(G) = E - N + 2
-V(G) = 21 - 16 + 2
-V(G) = 7
+V(G) = 19 - 15 + 2
+V(G) = 6
 ```
 
 Therefore, the basis set must contain **7 linearly independent paths**.
