@@ -85,6 +85,8 @@ def from_roman(s):
                 raise RomanError("invalid subtractive pair: " + text[i:i + 2])
         total += current
         i += 1
+    
+
     if total < _MIN_VALUE or total > _MAX_VALUE:
         raise RomanError("value out of range 1..3999")
 
@@ -104,6 +106,7 @@ def _count_char(text, ch):
         if c == ch:
             total += 1
     return total
+
 
 
 def _validate_canonical(text):
@@ -163,6 +166,7 @@ def _validate_canonical(text):
                 maximum_following_value,
                 subtracted_value,
             )
+
 
 def is_valid_roman(s):
     try:
