@@ -56,7 +56,7 @@ def to_roman(n):
 def from_roman(s):
     if not isinstance(s, str):
         raise RomanError("value must be a string")
-    text = s.upper()
+    text = s.strip().upper()
     if text == "":
         raise RomanError("empty string is not a roman numeral")
     for ch in text:
@@ -81,7 +81,11 @@ def from_roman(s):
         i += 1
     if total < _MIN_VALUE or total > _MAX_VALUE:
         raise RomanError("value out of range 1..3999")
+
+    _validate_canonical(text)
+
     return total
+ 
 
 
 def _roundtrip_differs(value, text):
@@ -95,6 +99,64 @@ def _count_char(text, ch):
             total += 1
     return total
 
+
+def _validate_canonical(text):
+    for ch in "IXCM":
+        if ch * 4 in text:
+            raise RomanError("roman numeral is not canonical")
+
+    for ch in "VLD":
+        if _count_char(text, ch) > 1:
+            raise RomanError("roman numeral is not canonical")
+
+    groups = []
+    used_pairs = set()
+    i = 0
+
+    while i < len(text):
+        if i + 1 < len(text):
+            pair = text[i:i + 2]
+
+            if pair in _VALID_SUBTRACTIVE:
+                if pair in used_pairs:
+                    raise RomanError(
+                        "roman numeral is not canonical"
+                    )
+
+                used_pairs.add(pair)
+
+                group_value = (
+                    _SINGLE[pair[1]] - _SINGLE[pair[0]]
+                )
+
+                groups.append(
+                    (group_value, _SINGLE[pair[0]])
+                )
+
+                i += 2
+                continue
+
+        current = _SINGLE[text[i]]
+        groups.append((current, None))
+        i += 1
+
+    previous_value = float("inf")
+    maximum_following_value = float("inf")
+
+    for group_value, subtracted_value in groups:
+        if group_value > previous_value:
+            raise RomanError("roman numeral is not canonical")
+
+        if group_value >= maximum_following_value:
+            raise RomanError("roman numeral is not canonical")
+
+        previous_value = group_value
+
+        if subtracted_value is not None:
+            maximum_following_value = min(
+                maximum_following_value,
+                subtracted_value,
+            )
 
 def is_valid_roman(s):
     try:
