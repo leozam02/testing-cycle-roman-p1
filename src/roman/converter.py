@@ -109,6 +109,7 @@ def _count_char(text, ch):
 
 
 
+
 def _validate_canonical(text):
     for ch in "IXCM":
         if ch * 4 in text:
